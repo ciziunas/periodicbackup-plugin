@@ -63,10 +63,13 @@ public class PeriodicBackup extends AsyncPeriodicWork {
                     try {
                         executor.backup(link.getFileManagerPlugin(), link.getStorages(), link.getLocations(), link.getTempDirectory(), link.getCycleQuantity(), link.getCycleDays());
                     } catch (PeriodicBackupException e) {
+                    	link.setErrorMessage(e.getMessage());
                         LOGGER.warning("Backup failure " + e.getMessage());
                     } catch (IOException e) {
+                    	link.setErrorMessage(e.getMessage());
                         LOGGER.warning("Backup failure " + e.getMessage());
                     } catch (ArchiverException e) {
+                    	link.setErrorMessage(e.getMessage());
                         LOGGER.warning("Backup failure " + e.getMessage());
                     } finally {
                         // Setting message to an empty String will make the "Creating backup..." message disappear in the UI

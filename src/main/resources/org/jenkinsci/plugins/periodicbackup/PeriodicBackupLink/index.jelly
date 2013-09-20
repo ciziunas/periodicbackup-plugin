@@ -27,6 +27,11 @@
     <l:layout norefresh="true" title="${%periodicBackupConfiguration.title}">
         <st:include page="sidepanel.jelly"/>
         <l:main-panel>
+        
+            <j:if test="${it.errorMessage != null and size(it.errorMessage) != 0}">
+                <div id="message" style="border:solid 1px #99CCFF; background:#BDE5F8; color:#FF0000;; padding:4px; text-align:center;">${it.errorMessage}</div>
+            </j:if>
+            
             <j:if test="${it.message != null and size(it.message) != 0}">
                 <div id="message" style="border:solid 1px #99CCFF; background:#BDE5F8; color:#00529B;; padding:4px; text-align:center;">${it.message}</div>
             </j:if>
@@ -42,7 +47,7 @@
                             <j:set var="noBackups" value="true"/>
                             <j:forEach var="location" items="${it.locations}">
                                 <div>
-                                    <h4>${location.displayName}</h4>
+                                    <h4>${location.displayName} <span style="color: #FF0000;">${location.warningMessage}</span></h4>
                                         <table>
                                             <j:forEach var="backup" items="${location.availableBackups}">
                                                 <tr>

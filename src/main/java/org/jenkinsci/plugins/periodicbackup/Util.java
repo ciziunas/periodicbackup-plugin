@@ -24,14 +24,18 @@
 
 package org.jenkinsci.plugins.periodicbackup;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
+import hudson.util.DescribableList;
 
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import org.apache.commons.lang.StringUtils;
+
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
 
 public class Util {
     /**
@@ -156,4 +160,41 @@ public class Util {
     public static boolean isWritableDirectory(File directory) {
         return (directory.exists() && directory.isDirectory() && directory.canWrite());
     }
+    
+    public static String getTempDirName(DescribableList<Location, LocationDescriptor> locations) throws IOException {
+    	if (locations != null && !locations.isEmpty()) {
+    		for (Location location : locations) {
+    			File tmpDir = location.getPath();
+    			if (tmpDir.canWrite()) {
+    				return tmpDir.getAbsolutePath() + "\\" + getFormattedDate(BackupObject.FILE_TIMESTAMP_PATTERN, new Date());
+    			}
+    		}
+    	}
+    	return null;
+    }
+    
+	public static boolean creteTempDir(String pathName) throws IOException {
+		if (StringUtils.isEmpty(pathName)) {
+			return false;
+		}
+    	File tmp = new File(pathName);
+    	tmp.setWritable(true);
+		return tmp.mkdir();
+    }
+    
+	public static boolean deleteTempDir(String pathName) throws IOException {
+		if (StringUtils.isEmpty(pathName)) {
+			return false;
+		}
+    	File tmp = new File(pathName);
+		return tmp.delete();
+    }
+    
+	public static boolean isValidDir(String dirPath) {
+		if (StringUtils.isEmpty(dirPath)) {
+			return false;
+		}
+		File file = new File(dirPath);
+		return (file != null ? file.canWrite() : false);
+	}
 }

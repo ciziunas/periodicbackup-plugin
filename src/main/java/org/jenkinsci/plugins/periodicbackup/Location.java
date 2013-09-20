@@ -39,6 +39,8 @@ import java.io.IOException;
 public abstract class Location extends AbstractModelObject implements Describable<Location> {
 
     public final boolean enabled;
+    
+    public String warningMessage;
 
     public Location(boolean enabled) {
         this.enabled = enabled;
@@ -79,6 +81,12 @@ public abstract class Location extends AbstractModelObject implements Describabl
      * @param backupObject the backupObject of the backup we want to delete
      */
     public abstract void deleteBackupFiles(BackupObject backupObject);
+    
+    /**
+     * The method returns File where backup is stored
+     * @return File where backup is stored
+     */
+    public abstract File getPath();
 
     /**
      *
@@ -97,5 +105,13 @@ public abstract class Location extends AbstractModelObject implements Describabl
     public String getSearchUrl() {
         return "Location";
     }
+    
+	public String getWarningMessage() {
+		return warningMessage;
+	}
+
+	public void setWarningMessage(String warningMessage) {
+		this.warningMessage = warningMessage;
+	}
 
 }

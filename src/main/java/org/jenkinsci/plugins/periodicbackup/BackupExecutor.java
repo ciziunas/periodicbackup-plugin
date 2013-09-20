@@ -58,11 +58,22 @@ public class BackupExecutor {
         File backupObjectFile;
         Date timestamp;
         String fileNameBase;
+        boolean isTmpDirSet = false;
 
         // timeThreshold is used to compare timestamps of backups in each location.
         // Older backups will be deleted after creating the backup.
         Calendar timeThreshold = Calendar.getInstance();
         timeThreshold.add(Calendar.DAY_OF_MONTH, (-1 * cycleDays));
+        
+        // Checking  if temporary directory name is valid
+        // if not, make it in the first valid location for backup storage 
+        if (!Util.isValidDir(tempDirectory)) {
+        	tempDirectory = Util.getTempDirName(locations);
+        	isTmpDirSet = Util.creteTempDir(tempDirectory);
+        	if (!isTmpDirSet || !Util.isValidDir(tempDirectory)) {
+        		throw new PeriodicBackupException("Temporary directory and backup location paths in config are not existing/writable directories");
+            }
+        }
 
         // Creating backup archives for each storage defined
         for (Storage storage : storages) {
@@ -129,6 +140,9 @@ public class BackupExecutor {
                 }
 
             }
+        }
+        if (isTmpDirSet) {
+        	Util.deleteTempDir(tempDirectory);
         }
         LOGGER.info("Backup finished successfully after " + (System.currentTimeMillis() - start) + " ms" );
     }

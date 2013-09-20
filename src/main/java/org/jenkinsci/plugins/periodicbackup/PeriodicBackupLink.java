@@ -61,6 +61,7 @@ public class PeriodicBackupLink extends ManagementLink implements Describable<Pe
     private final DescribableList<Storage, StorageDescriptor> storagePlugins = new DescribableList<Storage, StorageDescriptor>(this);
 
     private transient String message;   // Message shown on the web page when the backup/restore is performed
+    private String errorMessage;   // Error message shown on the web page when the backup/restore is performed\
     private boolean backupNow = false;  // Flag to determine if backup is triggered by cron or manually
     private String tempDirectory;       // Temporary directory for local storage of files, it should not be placed anywhere inside the Jenkins homedir
     private String cron;                // Backup schedule (cron like)
@@ -302,5 +303,12 @@ public class PeriodicBackupLink extends ManagementLink implements Describable<Pe
     public void setMessage(String message) {
         this.message = message;
     }
-}
+    
+	public String getErrorMessage() {
+		return errorMessage;
+	}
 
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
+	}
+}

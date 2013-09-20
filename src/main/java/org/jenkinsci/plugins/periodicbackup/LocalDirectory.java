@@ -56,10 +56,18 @@ public class LocalDirectory extends Location {
     public LocalDirectory(File path, boolean enabled) {
         super(enabled);
         this.path = path;
+        
+        if(!Util.isWritableDirectory(path)) {
+        	this.setWarningMessage(" is not a existing/writable directory.");
+        }
     }
 
     @Override
     public Iterable<BackupObject> getAvailableBackups() {
+    	// each time we list backups for home page, lets clean the error message
+    	PeriodicBackupLink link = PeriodicBackupLink.get();
+    	link.setErrorMessage(null);
+    	
         if( ! Util.isWritableDirectory(path)) {
             LOGGER.warning(path.getAbsolutePath() + " is not a existing/writable directory.");
             return Sets.newHashSet();
